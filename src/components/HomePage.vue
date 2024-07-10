@@ -21,23 +21,5 @@ export default {
     GameMatrix,
     GameFooter,
   },
-  mounted() {
-    if (localStorage.getItem("gameState")) {
-      let ans = confirm("Do you want to resume the last saved game?");
-      if (ans) {
-        this.$store.replaceState(
-          Object.assign(
-            this.$store.state,
-            JSON.parse(localStorage.getItem("gameState"))
-          )
-        );
-
-        this.$store.state.tooglePlayPause = false;
-        this.$store.state.showOverlay = true;
-        this.$store.state.overlayText = "Play";
-        this.$store.state.buttonText = "Play";
-      }
-    }
-  },
 };
 </script>
