@@ -76,10 +76,28 @@ export default {
     },
   },
   mounted() {
-    try {
+    if (localStorage.getItem("gameState")) {
+      let ans = confirm("Do you want to resume the last saved game?");
+      if (ans) {
+        console.log("yes");
+        this.$store.replaceState(
+          Object.assign(
+            this.$store.state,
+            JSON.parse(localStorage.getItem("gameState"))
+          )
+        );
+
+        this.$store.state.togglePlayPause = false;
+        this.$store.state.showOverlay = true;
+        this.$store.state.overlayText = "Play";
+        this.$store.state.buttonText = "Play";
+      } else {
+        console.log("yes nahi chaiye");
+        this.initializeGame();
+      }
+    } else {
+      console.log("No");
       this.initializeGame();
-    } catch (error) {
-      console.error("Error in mounted hook:", error);
     }
   },
 
@@ -91,7 +109,7 @@ export default {
     },
 
     initializeGame() {
-      if (this.grid != this.mat) return;
+      if (this.grid == this.mat) return;
       let matrix = this.getSolvedMatrix();
       this.$store.commit("setGrid", matrix);
     },
@@ -173,6 +191,7 @@ export default {
     },
     handleClickPlayBtn() {
       if (!this.togglePlayPause) {
+        console.log("play button chalega");
         let id = setInterval(() => this.$store.commit("incrementTime"), 1000);
         this.$store.commit("setTimerID", id);
       } else {
