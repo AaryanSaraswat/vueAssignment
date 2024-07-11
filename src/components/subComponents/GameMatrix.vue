@@ -31,7 +31,7 @@ export default {
         [1, 2, 3, 4],
         [5, 6, 7, 8],
         [9, 10, 11, 12],
-        [13, 14, 15, 0],
+        [13, 14, 15, null],
       ],
       mat: [
         [0, 0, 0, 0],
@@ -77,22 +77,25 @@ export default {
   },
   mounted() {
     if (localStorage.getItem("gameState")) {
-      let ans = confirm("Do you want to resume the last saved game?");
-      if (ans) {
-        console.log("yes");
-        this.$store.replaceState(
-          Object.assign(
-            this.$store.state,
-            JSON.parse(localStorage.getItem("gameState"))
-          )
-        );
+      let localStoragState = JSON.parse(localStorage.getItem("gameState"));
 
-        this.$store.state.togglePlayPause = false;
-        this.$store.state.showOverlay = true;
-        this.$store.state.overlayText = "Play";
-        this.$store.state.buttonText = "Play";
+      if (localStoragState.time != 0) {
+        let ans = confirm("Do you want to resume the last saved game?");
+        if (ans) {
+          console.log("yes");
+          this.$store.replaceState(
+            Object.assign(this.$store.state, localStoragState)
+          );
+
+          this.$store.state.togglePlayPause = false;
+          this.$store.state.showOverlay = true;
+          this.$store.state.overlayText = "Play";
+          this.$store.state.buttonText = "Play";
+        } else {
+          console.log("yes nahi chaiye");
+          this.initializeGame();
+        }
       } else {
-        console.log("yes nahi chaiye");
         this.initializeGame();
       }
     } else {
